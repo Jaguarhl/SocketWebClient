@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Socket Web Client</string>
+    <!-- Buttons -->
+    <string name="btn_connect">Connect to server</string>
+    <!-- Messages -->
+    <string name="warn_no_connection">No connection to server.</string>
+    <string name="warn_connect">Successfully connected to server.</string>
+    <string name="warn_unknown_response">Unknown response type.</string>
+</resources>
