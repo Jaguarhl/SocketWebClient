@@ -68,6 +68,7 @@ public class ClientService {
 //                            mSocket.emit("add user", mUsername);
                         Toast.makeText(mContext, R.string.warn_connect, Toast.LENGTH_LONG).show();
                         Log.d(LOG_TAG, mContext.getResources().getString(R.string.warn_connect));
+                        sportsMapImpl.askForSportMap();
                         isConnected = true;
                     }
                 }
@@ -115,17 +116,21 @@ public class ClientService {
         sportsMapImpl.clearSportsList();
         try {
             JSONObject sportMap = dataObj.getJSONObject(JSON_SPORT_MAP);
+            Log.d(LOG_TAG, "sportMap: " + sportMap.toString());
             JSONArray sportMapArray = sportMap.toJSONArray(sportMap.names());
+            Log.d(LOG_TAG, "sportMapArray: " + sportMapArray.toString());
             for (int i = 0; i < sportMapArray.length(); i++) {
                 JSONObject sportName = sportMapArray.getJSONObject(i);
+                Log.d(LOG_TAG, "sportName: " + sportName.toString() + " " + sportName.names());
                 JSONArray sportNameLabels = sportName.toJSONArray(sportName.names());
-                JSONObject spNamesObj = sportNameLabels.getJSONObject(1);
+                Log.d(LOG_TAG, "sportNameLabels: " + sportNameLabels.toString());
+                JSONObject spNamesObj = sportNameLabels.getJSONObject(0);
                 JSONArray spNamesArr = spNamesObj.toJSONArray(spNamesObj.names());
                 Map<String, String> names = new HashMap<>();
                 for (int k = 0; k < spNamesArr.length(); k++) {
                     names.put(spNamesObj.names().getString(k), spNamesArr.getString(k));
                 }
-                sportsMapImpl.addSportToList(Integer.parseInt(sportNameLabels.get(0).toString()),
+                sportsMapImpl.addSportToList(Integer.parseInt(sportNameLabels.get(1).toString()),
                         names);
             }
         } catch (Exception e) {

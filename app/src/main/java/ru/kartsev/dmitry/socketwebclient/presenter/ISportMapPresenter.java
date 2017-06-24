@@ -9,4 +9,5 @@ import java.util.Map;
 public interface ISportMapPresenter {
     void clearSportsList();
     void addSportToList(int sportId, Map<String, String> sportNames);
+    void askForSportMap();
 }
