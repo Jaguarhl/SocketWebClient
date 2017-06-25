@@ -12,6 +12,10 @@ public class SportName {
     @Expose
     private String en;
 
+    public String getRuCode() { return "ru"; }
+
+    public String getEnCode() { return "en"; }
+
     public String getRu() {
         return ru;
     }

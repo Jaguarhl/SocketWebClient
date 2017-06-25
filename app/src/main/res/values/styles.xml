@@ -7,5 +7,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+    <style name="textStyle" parent="AppTheme">
+        <item name="android:textSize">@dimen/text_size</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
 
 </resources>

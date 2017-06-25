@@ -31,4 +31,15 @@ public class Sports {
     public void setSportName(Map<String, String> sportName) {
         this.sportName = sportName;
     }
+
+    public String getSportNameByLng(String lang) {
+        String returnValue = "";
+        try {
+            returnValue = sportName.get(lang);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return returnValue.isEmpty()?sportName.get("en"):returnValue;
+    }
 }

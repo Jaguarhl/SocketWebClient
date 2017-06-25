@@ -3,9 +3,22 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/fil_margin"
+        android:layout_marginBottom="@dimen/fil_margin"
+        android:paddingStart="@dimen/fil_padding"
+        android:paddingLeft="@dimen/fil_padding"
+        android:textSize="@dimen/text_title"
+        android:text="@string/title_choose_sport" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/fil_margin"
+        android:layout_marginStart="@dimen/fil_margin"/>
 
 </LinearLayout>
