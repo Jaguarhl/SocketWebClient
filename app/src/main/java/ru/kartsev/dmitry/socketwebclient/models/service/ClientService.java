@@ -1,20 +1,26 @@
 package ru.kartsev.dmitry.socketwebclient.models.service;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import ru.kartsev.dmitry.socketwebclient.R;
+import ru.kartsev.dmitry.socketwebclient.models.answers.sport.SportDTO;
 import ru.kartsev.dmitry.socketwebclient.presenter.ISportMapPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.impl.SportMapImpl;
 import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
@@ -23,13 +29,12 @@ import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
 public class ClientService {
     public static final String LOG_TAG = "ClientService";
     public static final String KEY_SEND = "d";
-    public static final String ASK_SPORT_MAP = "sportMap";
     public static final String JSON_SPORT_MAP = "sportMap";
     private final int MIN_SYMBOLS_NUM = 12;
     private final int MAX_SYMBOLS_NUM = 16;
     private Socket mSocket;
     private Context mContext;
-    private MainActivity activity;
+    private FragmentActivity activity;
     private ISportMapPresenter sportsMapImpl;
     private boolean isConnected = false;
     // we will store requests types for server here (key is uniq msgid)
@@ -37,10 +42,10 @@ public class ClientService {
     // server port
     private static final int SERVER_PORT = 18500;
     // server IP address
-    private static final String SERVER_IP = /*"91.121.64.108";*/"81.176.228.82";
+    private static final String SERVER_IP = "91.121.64.108";/*"81.176.228.82";*/
 
 
-    public ClientService(Context context, MainActivity activity, SportMapImpl sportMap) {
+    public ClientService(Context context, FragmentActivity activity, SportMapImpl sportMap) {
         this.mContext = context;
         this.activity = activity;
         this.sportsMapImpl = sportMap;
@@ -68,6 +73,7 @@ public class ClientService {
 //                            mSocket.emit("add user", mUsername);
                         Toast.makeText(mContext, R.string.warn_connect, Toast.LENGTH_LONG).show();
                         Log.d(LOG_TAG, mContext.getResources().getString(R.string.warn_connect));
+                        sportsMapImpl.askForSportMap();
                         isConnected = true;
                     }
                 }
@@ -98,8 +104,11 @@ public class ClientService {
             JSONObject dataObj = data.getJSONObject("data");
             if (dataObj.get("status").toString().equals("200")) {
                 switch (requests.get(data.get("msgid").toString())) {
-                    case ASK_SPORT_MAP:
+                    case SportMapImpl.MATCH_STORAGE_LOAD_SPORT_MAP:
                         parseSportMapAnswer(dataObj);
+                        break;
+                    case SportMapImpl.MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP:
+                        parseTournamentMapAnswer(dataObj);
                         break;
                     default:
                         Log.d(LOG_TAG, mContext.getResources().getString(R.string.warn_unknown_response));
@@ -115,28 +124,35 @@ public class ClientService {
         sportsMapImpl.clearSportsList();
         try {
             JSONObject sportMap = dataObj.getJSONObject(JSON_SPORT_MAP);
+            Log.d(LOG_TAG, "sportMap: " + sportMap.toString());
             JSONArray sportMapArray = sportMap.toJSONArray(sportMap.names());
-            for (int i = 0; i < sportMapArray.length(); i++) {
-                JSONObject sportName = sportMapArray.getJSONObject(i);
-                JSONArray sportNameLabels = sportName.toJSONArray(sportName.names());
-                JSONObject spNamesObj = sportNameLabels.getJSONObject(1);
-                JSONArray spNamesArr = spNamesObj.toJSONArray(spNamesObj.names());
-                Map<String, String> names = new HashMap<>();
-                for (int k = 0; k < spNamesArr.length(); k++) {
-                    names.put(spNamesObj.names().getString(k), spNamesArr.getString(k));
+            Log.d(LOG_TAG, "sportMapArray: " + sportMapArray.toString());
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+            SportDTO[] data = gson.fromJson(sportMapArray.toString(), SportDTO[].class);
+            if (data != null) {
+                for (int l = 0; l < data.length; l++) {
+                    Log.d(LOG_TAG, data[l].toString());
+                    Map<String, String> names = new HashMap<>();
+                    names.put(data[l].getSportName().getEnCode(), data[l].getSportName().getEn());
+                    names.put(data[l].getSportName().getRuCode(), data[l].getSportName().getRu());
+                    sportsMapImpl.addSportToList(data[l].getSportId(),
+                            names);
                 }
-                sportsMapImpl.addSportToList(Integer.parseInt(sportNameLabels.get(0).toString()),
-                        names);
             }
+            sportsMapImpl.updateListInView();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void sendMessage(JSONObject message, String msgid) {
+    private void parseTournamentMapAnswer(JSONObject dataObj) {
+    }
+
+    public void sendMessage(JSONObject message, String msgid, String param) {
         if (mSocket.connected()) {
             Log.d(LOG_TAG, "Request to server: " + message);
-            requests.put(msgid, ASK_SPORT_MAP);
+            requests.put(msgid, param);
             mSocket.emit(KEY_SEND, message);
         }
 

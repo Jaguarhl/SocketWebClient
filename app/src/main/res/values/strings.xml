@@ -6,4 +6,7 @@
     <string name="warn_no_connection">No connection to server.</string>
     <string name="warn_connect">Successfully connected to server.</string>
     <string name="warn_unknown_response">Unknown response type.</string>
+    <string name="msg_list_is_empty">Sports list is empty.</string>
+    <!-- Titles -->
+    <string name="title_choose_sport">Please choose sport from list:</string>
 </resources>

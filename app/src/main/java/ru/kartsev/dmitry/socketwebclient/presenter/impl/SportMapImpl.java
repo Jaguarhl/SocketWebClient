@@ -1,6 +1,8 @@
 package ru.kartsev.dmitry.socketwebclient.presenter.impl;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -20,8 +22,7 @@ import ru.kartsev.dmitry.socketwebclient.models.service.ClientService;
 import ru.kartsev.dmitry.socketwebclient.presenter.IPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.ISportMapPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.vo.Sports;
-import ru.kartsev.dmitry.socketwebclient.view.IView;
-import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
+import ru.kartsev.dmitry.socketwebclient.view.impl.fragments.ISportMapView;
 
 /**
  * SportMap presenter implementation
@@ -31,18 +32,22 @@ import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
 public class SportMapImpl implements IPresenter, ISportMapPresenter {
     public static final String LOG_TAG = "SportMapPresenter";
     public static final String MATCH_STORAGE_LOAD_SPORT_MAP = "matchStorage:loadSportMap";
-    private IView view;
+    private static final String BUNDLE_SPORTS_LIST_KEY = "BUNDLE_SPORTS_LIST_KEY";
+    public static final String MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP = "matchStorage:loadSportTournamentMap";
+    public static final String REQUEST_SERVICE_PREMATCH = "prematch";
+    public static final String REQUEST_SERVICE_LIVE = "live";
+    private ISportMapView view;
     private Context context;
     private Socket mSocket;
-    private MainActivity activity;
+    private FragmentActivity activity;
     private ClientService service = null;
     // we will store loaded sports for recyclerview in this list
     private List<Sports> sportsList = new ArrayList<>();
 
-    public SportMapImpl(IView view, Context context, MainActivity mainActivity) {
+    public SportMapImpl(ISportMapView view, Context context, FragmentActivity Activity) {
         this.view = view;
         this.context = context;
-        this.activity = mainActivity;
+        this.activity = Activity;
         connectToServer();
     }
 
@@ -66,7 +71,7 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
         Log.d(LOG_TAG, "askForSportMap() called");
         if (service != null) {
             String msgid = service.generateMessageId();
-            RequestToServerDTO request = new RequestToServerDTO(new Data("live"),
+            RequestToServerDTO request = new RequestToServerDTO(new Data(REQUEST_SERVICE_LIVE),
                     msgid, MATCH_STORAGE_LOAD_SPORT_MAP);
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
@@ -74,26 +79,72 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
 
             try {
                 JSONObject object = new JSONObject(gson.toJson(request));
-                service.sendMessage(object, msgid);
+                service.sendMessage(object, msgid, MATCH_STORAGE_LOAD_SPORT_MAP);
             } catch (Exception e) {
-                view.displayError(e.getMessage());
+                e.printStackTrace();
+//                view.displayError(e.getMessage());
             }
         } else {
-            view.displayError(context.getResources().getString(R.string.warn_no_connection));
+            view.showMessage(context.getResources().getString(R.string.warn_no_connection));
         }
     }
 
     @Override
-    public void askForTournamentMap(int sportId) {
-        if (service != null) {
+    public void updateListInView() {
+        view.showSportsList(sportsList);
+    }
 
+    @Override
+    public void askForTournamentMap(int sportId) {
+        Log.d(LOG_TAG, "askForTournamentMap() called");
+        if (service != null) {
+            String msgid = service.generateMessageId();
+            RequestToServerDTO request = new RequestToServerDTO(new Data(REQUEST_SERVICE_PREMATCH,
+                    sportId), msgid, MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP);
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+            Log.d(LOG_TAG, gson.toJson(request));
+
+            try {
+                JSONObject object = new JSONObject(gson.toJson(request));
+                service.sendMessage(object, msgid, MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP);
+            } catch (Exception e) {
+                e.printStackTrace();
+//                view.displayError(e.getMessage());
+            }
         } else {
-            view.displayError(context.getResources().getString(R.string.warn_no_connection));
+            view.showMessage(context.getResources().getString(R.string.warn_no_connection));
         }
     }
 
     @Override
     public void onDestroy() {
         service.stopService();
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            sportsList = (List<Sports>) savedInstanceState.getSerializable(BUNDLE_SPORTS_LIST_KEY);
+        }
+
+        if (!isSportsListEmpty()) {
+            view.showSportsList(sportsList);
+        }
+    }
+
+    private boolean isSportsListEmpty() {
+        return sportsList == null || sportsList.isEmpty();
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        if (!isSportsListEmpty()) {
+            outState.putSerializable(BUNDLE_SPORTS_LIST_KEY, new ArrayList<>(sportsList));
+        }
+    }
+
+    public void clickSport(Sports sport) {
+        //view.startRepoInfoFragment(sport);
+        view.showMessage("Clicked " + sport.getSportNameByLng("ru"));
+        view.showSportTournamentInfo(sport.getSportId());
     }
 }
