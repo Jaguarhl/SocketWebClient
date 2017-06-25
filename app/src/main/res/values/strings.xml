@@ -7,6 +7,14 @@
     <string name="warn_connect">Successfully connected to server.</string>
     <string name="warn_unknown_response">Unknown response type.</string>
     <string name="msg_list_is_empty">Sports list is empty.</string>
+    <string name="msg_no_info">No information.</string>
     <!-- Titles -->
     <string name="title_choose_sport">Please choose sport from list:</string>
+    <string name="title_tournament_info">Tournaments on chosen sport:</string>
+    <!-- Labels -->
+    <string name="label_sport">Sport:</string>
+    <string name="label_category">Category:</string>
+    <string name="label_tournament_name">Tournament:</string>
+    <!-- Buttons -->
+    <string name="btn_close">Close</string>
 </resources>

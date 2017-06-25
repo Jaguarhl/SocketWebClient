@@ -18,7 +18,6 @@ import ru.kartsev.dmitry.socketwebclient.R;
 import ru.kartsev.dmitry.socketwebclient.presenter.ISportMapPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.impl.SportMapImpl;
 import ru.kartsev.dmitry.socketwebclient.presenter.vo.Sports;
-import ru.kartsev.dmitry.socketwebclient.view.IView;
 import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
 import ru.kartsev.dmitry.socketwebclient.view.impl.adapters.SportMapAdapter;
 
@@ -26,7 +25,7 @@ import ru.kartsev.dmitry.socketwebclient.view.impl.adapters.SportMapAdapter;
  * Created by dmitry on 24.06.17.
  */
 
-public class FrameItemsList extends BaseFragment implements ISportMapView, IView {
+public class FrameItemsList extends BaseFragment implements ISportMapView {
     private ISportMapPresenter presenter = new SportMapImpl(this, MainActivity.getContext(),
             MainActivity.getInstance());
     private SportMapAdapter adapter;
@@ -77,5 +76,11 @@ public class FrameItemsList extends BaseFragment implements ISportMapView, IView
     @Override
     public void displayError(String message) {
         makeToast(message);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenter.onSaveInstanceState(outState);
     }
 }

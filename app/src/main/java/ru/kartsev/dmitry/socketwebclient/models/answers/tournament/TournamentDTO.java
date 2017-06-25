@@ -25,7 +25,11 @@ public class TournamentDTO {
     private int categoryId;
 
     public SportName getSportName() {
-        return sportName;
+        if (sportName != null) {
+            return sportName;
+        } else {
+            return new SportName();
+        }
     }
 
     public void setSportName(SportName sportName) {
@@ -41,7 +45,11 @@ public class TournamentDTO {
     }
 
     public TournamentName getTournamentName() {
-        return tournamentName;
+        if (tournamentName != null) {
+            return tournamentName;
+        } else {
+            return new TournamentName();
+        }
     }
 
     public void setTournamentName(TournamentName tournamentName) {
@@ -49,7 +57,11 @@ public class TournamentDTO {
     }
 
     public CategoryName getCategoryName() {
-        return categoryName;
+        if (categoryName != null) {
+            return categoryName;
+        } else {
+            return new CategoryName();
+        }
     }
 
     public void setCategoryName(CategoryName categoryName) {
@@ -74,8 +86,8 @@ public class TournamentDTO {
 
     @Override
     public String toString() {
-        return sportName.getRu() + " " + tournamentId + " " + tournamentName.getRu()
-                + " " +categoryId + " " + categoryName.getRu() + " " + sportId + " "
-                + categoryId;
+        return getSportName().getRu() + " " + tournamentId + " " + getTournamentName().getRu()
+                    + " " + categoryId + " " + getCategoryName().getRu() + " " + sportId + " "
+                    + categoryId;
     }
 }

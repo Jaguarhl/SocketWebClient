@@ -7,17 +7,21 @@ public class TournamentName {
 
     @SerializedName("en")
     @Expose
-    private String en;
+    private String en = "";
     @SerializedName("ru")
     @Expose
-    private String ru;
+    private String ru = "";
 
     public String getEn() {
         return en;
     }
 
     public void setEn(String en) {
-        this.en = en;
+        if (en != null) {
+            this.en = en;
+        } else {
+            en = "";
+        }
     }
 
     public String getRu() {
@@ -25,7 +29,11 @@ public class TournamentName {
     }
 
     public void setRu(String ru) {
-        this.ru = ru;
+        if (ru != null) {
+            this.ru = ru;
+        } else {
+            ru = "";
+        }
     }
 
 }

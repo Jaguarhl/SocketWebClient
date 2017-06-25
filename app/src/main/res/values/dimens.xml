@@ -5,6 +5,7 @@
     <!-- Margins and paddings -->
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fil_margin">15dp</dimen>
+    <dimen name="rit_margin">25dp</dimen>
     <dimen name="fil_padding">10dp</dimen>
     <!-- Text -->
     <dimen name="text_title">18sp</dimen>

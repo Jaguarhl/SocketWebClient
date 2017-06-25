@@ -1,7 +1,6 @@
-package ru.kartsev.dmitry.socketwebclient.view.impl.adapters;
+/*package ru.kartsev.dmitry.socketwebclient.view.impl.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,15 +11,15 @@ import java.util.List;
 import ru.kartsev.dmitry.socketwebclient.R;
 
 /**
- * Created by dmitry on 24.06.17.
+ * Created by dmitry on 26.06.17.
  */
 
-public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseAdapter.ViewHolder> {
+/*public abstract class BaseAdapterTournamentInfo<T> extends RecyclerView.Adapter<BaseAdapterTournamentInfo.ViewHolder> {
 
-    public static final String LOG_TAG = "BaseAdapter";
+    public static final String LOG_TAG = "BaseAdapterTInfo";
     protected List<T> list;
 
-    public BaseAdapter(List<T> list) {
+    public BaseAdapterTournamentInfo(List<T> list) {
         this.list = list;
     }
 
@@ -30,7 +29,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseAdapter.Vi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.text_item_layout,
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_item_tournament,
                 viewGroup, false);
         return new ViewHolder(v);
     }
@@ -41,12 +40,13 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<BaseAdapter.Vi
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView text;
+        TextView textCategoryName;
+        TextView textTournamentName
 
         public ViewHolder(View itemView) {
             super(itemView);
-            text = (TextView) itemView.findViewById(R.id.textView);
+            textCategoryName = (TextView) itemView.findViewById(R.id.textCategoryName);
+            textTournamentName = (TextView) itemView.findViewById(R.id.textTournamentName);
         }
     }
-
-}
+}*/

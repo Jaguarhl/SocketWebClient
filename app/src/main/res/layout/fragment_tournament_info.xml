@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/fil_margin"
+        android:layout_marginLeft="@dimen/fil_margin"
+        android:layout_marginStart="@dimen/fil_margin"
+        android:text="@string/title_tournament_info"
+        android:textSize="@dimen/text_title" />
+
+    <TextView
+        android:id="@+id/textLableSport"
+        android:layout_width="67dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/fil_margin"
+        android:layout_marginLeft="@dimen/fil_margin"
+        android:layout_marginStart="@dimen/fil_margin"
+        android:layout_below="@+id/textTitle"
+        android:text="@string/label_sport" />
+
+    <TextView
+        android:id="@+id/textSport"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_alignBaseline="@+id/textLableSport"
+        android:layout_alignBottom="@+id/textLableSport"
+        android:layout_toRightOf="@+id/textLableSport"
+        android:layout_toEndOf="@+id/textLableSport" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignLeft="@+id/textLableSport"
+        android:layout_alignStart="@+id/textLableSport"
+        android:layout_below="@+id/textLableSport"
+        android:layout_marginTop="@dimen/fil_margin"
+        android:layout_marginEnd="@dimen/fil_margin"
+        android:layout_marginRight="@dimen/fil_margin"/>
+</RelativeLayout>

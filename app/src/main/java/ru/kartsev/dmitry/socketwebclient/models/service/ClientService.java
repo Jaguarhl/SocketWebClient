@@ -25,6 +25,7 @@ import ru.kartsev.dmitry.socketwebclient.models.answers.tournament.TournamentDTO
 import ru.kartsev.dmitry.socketwebclient.presenter.Constants;
 import ru.kartsev.dmitry.socketwebclient.presenter.ISportMapPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.impl.SportMapImpl;
+import ru.kartsev.dmitry.socketwebclient.presenter.vo.TournamentInfo;
 import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
 
 
@@ -42,7 +43,7 @@ public class ClientService {
     // server port
     private static final int SERVER_PORT = 18500;
     // server IP address
-    private static final String SERVER_IP = "91.121.64.108";/*"81.176.228.82";*/
+    private static final String SERVER_IP = /*"91.121.64.108";*/"81.176.228.82";
 
 
     public ClientService(Context context, FragmentActivity activity, SportMapImpl sportMap) {
@@ -116,6 +117,7 @@ public class ClientService {
     }
 
     private void parseSportMapAnswer(JSONObject dataObj) {
+        // let's clear our sportsMap list before
         sportsMapImpl.clearSportsList();
         try {
             JSONObject sportMap = dataObj.getJSONObject(Constants.JSON_SPORT_MAP);
@@ -142,6 +144,8 @@ public class ClientService {
     }
 
     private void parseTournamentMapAnswer(JSONObject dataObj) {
+        // let's clear tournamentsList before
+        sportsMapImpl.clearTournamentsList();
         try {
             JSONObject sportTournamentMap = dataObj.getJSONObject(Constants.JSON_SPORT_TOURNAMENT_MAP);
             Log.d(LOG_TAG, "sportTournamentMap: " + sportTournamentMap.toString());
@@ -158,15 +162,18 @@ public class ClientService {
                 if (data != null) {
                     for (int l = 0; l < data.length; l++) {
                         Log.d(LOG_TAG, "" + data[l].toString());
-                    /*Map<String, String> names = new HashMap<>();
-                    names.put(data[l].getSportName().getEnCode(), data[l].getSportName().getEn());
-                    names.put(data[l].getSportName().getRuCode(), data[l].getSportName().getRu());
-                    sportsMapImpl.addSportToList(data[l].getSportId(),
-                            names);*/
+                        Map<String, String> categoryNames = new HashMap<>();
+                        categoryNames.put(Constants.CODE_EN, data[l].getCategoryName().getEn());
+                        categoryNames.put(Constants.CODE_RU, data[l].getCategoryName().getRu());
+                        Map<String, String> tournamentNames = new HashMap<>();
+                        tournamentNames.put(Constants.CODE_EN, data[l].getTournamentName().getEn());
+                        tournamentNames.put(Constants.CODE_RU, data[l].getTournamentName().getRu());
+                        sportsMapImpl.addTournamentToList(new TournamentInfo(data[l].getSportId(),
+                                categoryNames, tournamentNames));
                     }
                 }
+                sportsMapImpl.showTournamentInfo();
             }
-//            sportsMapImpl.updateListInView();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,7 +195,7 @@ public class ClientService {
     }
 
     public String generateMessageId() {
-        // набор символов, из которых генерируется случайным образом msgId
+        // symbols to randomly create from messageId
         String symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                 "abcdefghijklmnopqrstuvwqyz" +
                 "1234567890";

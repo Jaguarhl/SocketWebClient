@@ -12,7 +12,7 @@ import ru.kartsev.dmitry.socketwebclient.presenter.vo.Sports;
  * Created by dmitry on 24.06.17.
  */
 
-public class SportMapAdapter extends BaseAdapter<Sports> {
+public class SportMapAdapter extends BaseAdapterSportMap<Sports> {
     public static final String LOG_TAG = "SportMapAdapter";
     private ISportMapPresenter presenter;
 
@@ -22,7 +22,7 @@ public class SportMapAdapter extends BaseAdapter<Sports> {
     }
 
     @Override
-    public void onBindViewHolder(BaseAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(BaseAdapterSportMap.ViewHolder holder, int position) {
         final Sports sport = list.get(position);
         Log.d(LOG_TAG, sport.getSportNameByLng("ru") + " position " + position);
         holder.text.setText(sport.getSportNameByLng("ru"));

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Socket Web Client</string>
+    <!-- Buttons -->
+    <string name="btn_connect">Подключиться к серверу</string>
+    <!-- Messages -->
+    <string name="warn_no_connection">Отсутствует соединение с сервером.</string>
+    <string name="warn_connect">Соединение с сервером установлено.</string>
+    <string name="warn_unknown_response">Неизвестный тип ответа от сервера.</string>
+    <string name="msg_list_is_empty">Список видов спорта пуст.</string>
+    <string name="msg_no_info">Информация отсутствует.</string>
+    <!-- Titles -->
+    <string name="title_choose_sport">Выберите вид спорта из списка:</string>
+    <string name="title_tournament_info">Соревнования в выбранном виде спорта:</string>
+    <!-- Labels -->
+    <string name="label_sport">Спорт:</string>
+    <string name="label_category">Категория:</string>
+    <string name="label_tournament_name">Турнир:</string>
+    <!-- Buttons -->
+    <string name="btn_close">Закрыть</string>
+</resources>

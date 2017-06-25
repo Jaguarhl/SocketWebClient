@@ -1,6 +1,8 @@
 package ru.kartsev.dmitry.socketwebclient.presenter.impl;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -23,6 +25,7 @@ import ru.kartsev.dmitry.socketwebclient.presenter.Constants;
 import ru.kartsev.dmitry.socketwebclient.presenter.IPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.ISportMapPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.vo.Sports;
+import ru.kartsev.dmitry.socketwebclient.presenter.vo.TournamentInfo;
 import ru.kartsev.dmitry.socketwebclient.view.impl.fragments.ISportMapView;
 
 /**
@@ -30,7 +33,7 @@ import ru.kartsev.dmitry.socketwebclient.view.impl.fragments.ISportMapView;
  * 22.06.17
  */
 
-public class SportMapImpl implements IPresenter, ISportMapPresenter {
+public class SportMapImpl implements ISportMapPresenter {
     public static final String LOG_TAG = "SportMapPresenter";
     private static final String BUNDLE_SPORTS_LIST_KEY = "BUNDLE_SPORTS_LIST_KEY";
     private ISportMapView view;
@@ -40,6 +43,8 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
     private ClientService service = null;
     // we will store loaded sports for recyclerview in this list
     private List<Sports> sportsList = new ArrayList<>();
+    // we will store loaded tournaments data in this lis
+    private List<TournamentInfo> tournamentsList = new ArrayList<>();
 
     public SportMapImpl(ISportMapView view, Context context, FragmentActivity Activity) {
         this.view = view;
@@ -56,6 +61,11 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
 
     public void clearSportsList() {
         sportsList.clear();
+    }
+
+    @Override
+    public void clearTournamentsList() {
+        tournamentsList.clear();
     }
 
     @Override
@@ -79,7 +89,7 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
                 service.sendMessage(object, msgid, Constants.MATCH_STORAGE_LOAD_SPORT_MAP);
             } catch (Exception e) {
                 e.printStackTrace();
-//                view.displayError(e.getMessage());
+                view.showMessage(e.getMessage());
             }
         } else {
             view.showMessage(context.getResources().getString(R.string.warn_no_connection));
@@ -107,7 +117,7 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
                 service.sendMessage(object, msgid, Constants.MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP);
             } catch (Exception e) {
                 e.printStackTrace();
-//                view.displayError(e.getMessage());
+                view.showMessage(e.getMessage());
             }
         } else {
             view.showMessage(context.getResources().getString(R.string.warn_no_connection));
@@ -139,9 +149,53 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
         }
     }
 
+    @Override
+    public void showTournamentInfo() {
+        String tournamentInfo = "";
+        for (TournamentInfo data: tournamentsList) {
+            if (data.getCategoryNameByLanguage(Constants.CODE_RU) != null) {
+                tournamentInfo += data.getCategoryNameByLanguage(Constants.CODE_RU);
+                tournamentInfo += "\n";
+                Log.d(LOG_TAG, "Cat: " + tournamentInfo);
+            }
+            if (data.getTournamentNameByLanguage(Constants.CODE_RU) != null) {
+                tournamentInfo += "  ";
+                tournamentInfo += data.getTournamentNameByLanguage(Constants.CODE_RU);
+                Log.d(LOG_TAG, "Tor: " + tournamentInfo);
+            }
+            if (tournamentInfo.length() < 2) tournamentInfo = context.getResources().getString(R.string.msg_no_info);
+            tournamentInfo += "\n\n";
+        }
+
+        showDialog(tournamentInfo);
+    }
+
+    private void showDialog(String tournamentInfo) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle(context.getResources().getString(R.string.title_tournament_info))
+                .setMessage(tournamentInfo)
+                .setCancelable(false)
+                .setNegativeButton(context.getResources().getString(R.string.btn_close),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     public void clickSport(Sports sport) {
         //view.startRepoInfoFragment(sport);
-        view.showMessage("Clicked " + sport.getSportNameByLng("ru"));
+        Log.d(LOG_TAG, sport.getSportNameByLng("ru") + " " + sport.getSportId());
         view.showSportTournamentInfo(sport.getSportId());
+    }
+
+    public void addTournamentToList(TournamentInfo info) {
+        try {
+            tournamentsList.add(info);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

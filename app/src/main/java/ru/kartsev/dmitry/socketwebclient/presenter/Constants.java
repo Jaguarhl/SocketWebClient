@@ -16,4 +16,6 @@ public class Constants {
     public static final String KEY_SEND = "d";
     public static final String JSON_SPORT_MAP = "sportMap";
     public static final String JSON_SPORT_TOURNAMENT_MAP = "sportTournamentMap";
+    public static final String CODE_RU = "ru";
+    public static final String CODE_EN = "en";
 }

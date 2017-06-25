@@ -7,25 +7,37 @@ public class CategoryName {
 
     @SerializedName("en")
     @Expose
-    private String en;
+    private String en = "";
     @SerializedName("ru")
     @Expose
-    private String ru;
+    private String ru = "";
 
     public String getEn() {
-        return en;
+        if (en != null) {
+            return en;
+        } else {
+            return "";
+        }
     }
 
     public void setEn(String en) {
-        this.en = en;
+        if (en != null) {
+            this.en = en;
+        }
     }
 
     public String getRu() {
-        return ru;
+        if (ru != null) {
+            return ru;
+        } else {
+            return "";
+        }
     }
 
     public void setRu(String ru) {
-        this.ru = ru;
+        if (ru != null) {
+            this.ru = ru;
+        }
     }
 
 }

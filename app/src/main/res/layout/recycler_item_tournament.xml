@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_category"
+        android:textSize="@dimen/text_size"
+        android:layout_marginStart="@dimen/fil_margin"
+        android:layout_marginLeft="@dimen/fil_margin"
+        android:layout_marginTop="@dimen/fil_margin"/>
+
+    <TextView
+        android:id="@+id/textCategoryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="@dimen/text_size"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/rit_margin"
+        android:layout_marginLeft="@dimen/rit_margin"
+        android:layout_marginTop="@dimen/fil_margin"/>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/label_tournament_name"
+        android:textSize="@dimen/text_size"
+        android:layout_marginStart="@dimen/fil_margin"
+        android:layout_marginLeft="@dimen/fil_margin"
+        android:layout_marginTop="@dimen/fil_margin" />
+
+    <TextView
+        android:id="@+id/textTournamentName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="@dimen/text_size"
+        android:textStyle="bold"
+        android:layout_marginStart="@dimen/rit_margin"
+        android:layout_marginLeft="@dimen/rit_margin"
+        android:layout_marginTop="@dimen/fil_margin" />
+</LinearLayout>
