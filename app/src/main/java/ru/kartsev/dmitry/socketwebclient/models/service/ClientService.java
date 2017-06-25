@@ -21,6 +21,8 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import ru.kartsev.dmitry.socketwebclient.R;
 import ru.kartsev.dmitry.socketwebclient.models.answers.sport.SportDTO;
+import ru.kartsev.dmitry.socketwebclient.models.answers.tournament.TournamentDTO;
+import ru.kartsev.dmitry.socketwebclient.presenter.Constants;
 import ru.kartsev.dmitry.socketwebclient.presenter.ISportMapPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.impl.SportMapImpl;
 import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
@@ -28,8 +30,6 @@ import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
 
 public class ClientService {
     public static final String LOG_TAG = "ClientService";
-    public static final String KEY_SEND = "d";
-    public static final String JSON_SPORT_MAP = "sportMap";
     private final int MIN_SYMBOLS_NUM = 12;
     private final int MAX_SYMBOLS_NUM = 16;
     private Socket mSocket;
@@ -70,7 +70,6 @@ public class ClientService {
                 @Override
                 public void run() {
                     if(!isConnected) {
-//                            mSocket.emit("add user", mUsername);
                         Toast.makeText(mContext, R.string.warn_connect, Toast.LENGTH_LONG).show();
                         Log.d(LOG_TAG, mContext.getResources().getString(R.string.warn_connect));
                         sportsMapImpl.askForSportMap();
@@ -90,10 +89,6 @@ public class ClientService {
                     JSONObject data = (JSONObject) args[0];
                     Log.d(LOG_TAG, "Answer: " + data.toString());
                     parseAnswer(data);
-
-//                    if (!status.isEmpty() && status.equals("404")) {
-//                        Toast.makeText(mContext, "Error 404 (wrong request)", Toast.LENGTH_LONG).show();
-//                    }
                 }
             });
         }
@@ -101,13 +96,13 @@ public class ClientService {
 
     private void parseAnswer(JSONObject data) {
         try {
-            JSONObject dataObj = data.getJSONObject("data");
-            if (dataObj.get("status").toString().equals("200")) {
-                switch (requests.get(data.get("msgid").toString())) {
-                    case SportMapImpl.MATCH_STORAGE_LOAD_SPORT_MAP:
+            JSONObject dataObj = data.getJSONObject(Constants.ANSWER_DATA);
+            if (dataObj.get(Constants.ANSWER_STATUS).toString().equals(Constants.ANSWER_STATUS_OK)) {
+                switch (requests.get(data.get(Constants.REQUEST_MSGID).toString())) {
+                    case Constants.MATCH_STORAGE_LOAD_SPORT_MAP:
                         parseSportMapAnswer(dataObj);
                         break;
-                    case SportMapImpl.MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP:
+                    case Constants.MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP:
                         parseTournamentMapAnswer(dataObj);
                         break;
                     default:
@@ -123,7 +118,7 @@ public class ClientService {
     private void parseSportMapAnswer(JSONObject dataObj) {
         sportsMapImpl.clearSportsList();
         try {
-            JSONObject sportMap = dataObj.getJSONObject(JSON_SPORT_MAP);
+            JSONObject sportMap = dataObj.getJSONObject(Constants.JSON_SPORT_MAP);
             Log.d(LOG_TAG, "sportMap: " + sportMap.toString());
             JSONArray sportMapArray = sportMap.toJSONArray(sportMap.names());
             Log.d(LOG_TAG, "sportMapArray: " + sportMapArray.toString());
@@ -147,13 +142,41 @@ public class ClientService {
     }
 
     private void parseTournamentMapAnswer(JSONObject dataObj) {
+        try {
+            JSONObject sportTournamentMap = dataObj.getJSONObject(Constants.JSON_SPORT_TOURNAMENT_MAP);
+            Log.d(LOG_TAG, "sportTournamentMap: " + sportTournamentMap.toString());
+            JSONArray sportTournamentMapArray = sportTournamentMap.toJSONArray(sportTournamentMap.names());
+            Log.d(LOG_TAG, "sportTournamentMapArray: " + sportTournamentMapArray.toString());
+            for (int i = 0; i < sportTournamentMapArray.length(); i++) {
+                JSONObject sportTournamentObj = sportTournamentMapArray.getJSONObject(i);
+                Log.d(LOG_TAG, "sportTournamentObj: " + sportTournamentObj.toString());
+                JSONArray sportTournamentObjArr = sportTournamentObj.toJSONArray(sportTournamentObj.names());
+                Log.d(LOG_TAG, "sportTournamentObjArr: " + sportTournamentObjArr.toString());
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                Gson gson = gsonBuilder.create();
+                TournamentDTO[] data = gson.fromJson(sportTournamentObjArr.toString(), TournamentDTO[].class);
+                if (data != null) {
+                    for (int l = 0; l < data.length; l++) {
+                        Log.d(LOG_TAG, "" + data[l].toString());
+                    /*Map<String, String> names = new HashMap<>();
+                    names.put(data[l].getSportName().getEnCode(), data[l].getSportName().getEn());
+                    names.put(data[l].getSportName().getRuCode(), data[l].getSportName().getRu());
+                    sportsMapImpl.addSportToList(data[l].getSportId(),
+                            names);*/
+                    }
+                }
+            }
+//            sportsMapImpl.updateListInView();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendMessage(JSONObject message, String msgid, String param) {
         if (mSocket.connected()) {
             Log.d(LOG_TAG, "Request to server: " + message);
             requests.put(msgid, param);
-            mSocket.emit(KEY_SEND, message);
+            mSocket.emit(Constants.KEY_SEND, message);
         }
 
     }

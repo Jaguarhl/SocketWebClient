@@ -19,6 +19,7 @@ import ru.kartsev.dmitry.socketwebclient.R;
 import ru.kartsev.dmitry.socketwebclient.models.requests.Data;
 import ru.kartsev.dmitry.socketwebclient.models.requests.RequestToServerDTO;
 import ru.kartsev.dmitry.socketwebclient.models.service.ClientService;
+import ru.kartsev.dmitry.socketwebclient.presenter.Constants;
 import ru.kartsev.dmitry.socketwebclient.presenter.IPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.ISportMapPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.vo.Sports;
@@ -31,11 +32,7 @@ import ru.kartsev.dmitry.socketwebclient.view.impl.fragments.ISportMapView;
 
 public class SportMapImpl implements IPresenter, ISportMapPresenter {
     public static final String LOG_TAG = "SportMapPresenter";
-    public static final String MATCH_STORAGE_LOAD_SPORT_MAP = "matchStorage:loadSportMap";
     private static final String BUNDLE_SPORTS_LIST_KEY = "BUNDLE_SPORTS_LIST_KEY";
-    public static final String MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP = "matchStorage:loadSportTournamentMap";
-    public static final String REQUEST_SERVICE_PREMATCH = "prematch";
-    public static final String REQUEST_SERVICE_LIVE = "live";
     private ISportMapView view;
     private Context context;
     private Socket mSocket;
@@ -71,15 +68,15 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
         Log.d(LOG_TAG, "askForSportMap() called");
         if (service != null) {
             String msgid = service.generateMessageId();
-            RequestToServerDTO request = new RequestToServerDTO(new Data(REQUEST_SERVICE_LIVE),
-                    msgid, MATCH_STORAGE_LOAD_SPORT_MAP);
+            RequestToServerDTO request = new RequestToServerDTO(new Data(Constants.REQUEST_SERVICE_LIVE),
+                    msgid, Constants.MATCH_STORAGE_LOAD_SPORT_MAP);
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             Log.d(LOG_TAG, gson.toJson(request));
 
             try {
                 JSONObject object = new JSONObject(gson.toJson(request));
-                service.sendMessage(object, msgid, MATCH_STORAGE_LOAD_SPORT_MAP);
+                service.sendMessage(object, msgid, Constants.MATCH_STORAGE_LOAD_SPORT_MAP);
             } catch (Exception e) {
                 e.printStackTrace();
 //                view.displayError(e.getMessage());
@@ -99,15 +96,15 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
         Log.d(LOG_TAG, "askForTournamentMap() called");
         if (service != null) {
             String msgid = service.generateMessageId();
-            RequestToServerDTO request = new RequestToServerDTO(new Data(REQUEST_SERVICE_PREMATCH,
-                    sportId), msgid, MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP);
+            RequestToServerDTO request = new RequestToServerDTO(new Data(Constants.REQUEST_SERVICE_PREMATCH,
+                    sportId), msgid, Constants.MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP);
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             Log.d(LOG_TAG, gson.toJson(request));
 
             try {
                 JSONObject object = new JSONObject(gson.toJson(request));
-                service.sendMessage(object, msgid, MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP);
+                service.sendMessage(object, msgid, Constants.MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP);
             } catch (Exception e) {
                 e.printStackTrace();
 //                view.displayError(e.getMessage());
