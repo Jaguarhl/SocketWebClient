@@ -15,4 +15,6 @@ public interface ISportMapView {
 //    void startRepoInfoFragment(Repository vo);
 
     void showEmptyList();
+
+    void showSportTournamentInfo(int sportId);
 }

@@ -70,6 +70,11 @@ public class FrameItemsList extends BaseFragment implements ISportMapView, IView
     }
 
     @Override
+    public void showSportTournamentInfo(int sportId) {
+        presenter.askForTournamentMap(sportId);
+    }
+
+    @Override
     public void displayError(String message) {
         makeToast(message);
     }

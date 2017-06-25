@@ -29,7 +29,6 @@ import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
 public class ClientService {
     public static final String LOG_TAG = "ClientService";
     public static final String KEY_SEND = "d";
-    public static final String ASK_SPORT_MAP = "sportMap";
     public static final String JSON_SPORT_MAP = "sportMap";
     private final int MIN_SYMBOLS_NUM = 12;
     private final int MAX_SYMBOLS_NUM = 16;
@@ -43,7 +42,7 @@ public class ClientService {
     // server port
     private static final int SERVER_PORT = 18500;
     // server IP address
-    private static final String SERVER_IP = /*"91.121.64.108";*/"81.176.228.82";
+    private static final String SERVER_IP = "91.121.64.108";/*"81.176.228.82";*/
 
 
     public ClientService(Context context, FragmentActivity activity, SportMapImpl sportMap) {
@@ -105,8 +104,11 @@ public class ClientService {
             JSONObject dataObj = data.getJSONObject("data");
             if (dataObj.get("status").toString().equals("200")) {
                 switch (requests.get(data.get("msgid").toString())) {
-                    case ASK_SPORT_MAP:
+                    case SportMapImpl.MATCH_STORAGE_LOAD_SPORT_MAP:
                         parseSportMapAnswer(dataObj);
+                        break;
+                    case SportMapImpl.MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP:
+                        parseTournamentMapAnswer(dataObj);
                         break;
                     default:
                         Log.d(LOG_TAG, mContext.getResources().getString(R.string.warn_unknown_response));
@@ -144,10 +146,13 @@ public class ClientService {
         }
     }
 
-    public void sendMessage(JSONObject message, String msgid) {
+    private void parseTournamentMapAnswer(JSONObject dataObj) {
+    }
+
+    public void sendMessage(JSONObject message, String msgid, String param) {
         if (mSocket.connected()) {
             Log.d(LOG_TAG, "Request to server: " + message);
-            requests.put(msgid, ASK_SPORT_MAP);
+            requests.put(msgid, param);
             mSocket.emit(KEY_SEND, message);
         }
 

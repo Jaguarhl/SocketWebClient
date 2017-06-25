@@ -16,6 +16,7 @@ public interface ISportMapPresenter {
     void clearSportsList();
     void addSportToList(int sportId, Map<String, String> sportNames);
     void askForSportMap();
+    void askForTournamentMap(int sportId);
     void updateListInView();
     void clickSport(Sports sport);
     void onCreate(Bundle savedInstanceState);

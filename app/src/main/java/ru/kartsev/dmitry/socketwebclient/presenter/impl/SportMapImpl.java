@@ -33,6 +33,9 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
     public static final String LOG_TAG = "SportMapPresenter";
     public static final String MATCH_STORAGE_LOAD_SPORT_MAP = "matchStorage:loadSportMap";
     private static final String BUNDLE_SPORTS_LIST_KEY = "BUNDLE_SPORTS_LIST_KEY";
+    public static final String MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP = "matchStorage:loadSportTournamentMap";
+    public static final String REQUEST_SERVICE_PREMATCH = "prematch";
+    public static final String REQUEST_SERVICE_LIVE = "live";
     private ISportMapView view;
     private Context context;
     private Socket mSocket;
@@ -68,7 +71,7 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
         Log.d(LOG_TAG, "askForSportMap() called");
         if (service != null) {
             String msgid = service.generateMessageId();
-            RequestToServerDTO request = new RequestToServerDTO(new Data("live"),
+            RequestToServerDTO request = new RequestToServerDTO(new Data(REQUEST_SERVICE_LIVE),
                     msgid, MATCH_STORAGE_LOAD_SPORT_MAP);
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
@@ -76,7 +79,7 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
 
             try {
                 JSONObject object = new JSONObject(gson.toJson(request));
-                service.sendMessage(object, msgid);
+                service.sendMessage(object, msgid, MATCH_STORAGE_LOAD_SPORT_MAP);
             } catch (Exception e) {
                 e.printStackTrace();
 //                view.displayError(e.getMessage());
@@ -93,8 +96,22 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
 
     @Override
     public void askForTournamentMap(int sportId) {
+        Log.d(LOG_TAG, "askForTournamentMap() called");
         if (service != null) {
+            String msgid = service.generateMessageId();
+            RequestToServerDTO request = new RequestToServerDTO(new Data(REQUEST_SERVICE_PREMATCH,
+                    sportId), msgid, MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP);
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+            Log.d(LOG_TAG, gson.toJson(request));
 
+            try {
+                JSONObject object = new JSONObject(gson.toJson(request));
+                service.sendMessage(object, msgid, MATCH_STORAGE_LOAD_SPORT_TOURNAMENT_MAP);
+            } catch (Exception e) {
+                e.printStackTrace();
+//                view.displayError(e.getMessage());
+            }
         } else {
             view.showMessage(context.getResources().getString(R.string.warn_no_connection));
         }
@@ -128,5 +145,6 @@ public class SportMapImpl implements IPresenter, ISportMapPresenter {
     public void clickSport(Sports sport) {
         //view.startRepoInfoFragment(sport);
         view.showMessage("Clicked " + sport.getSportNameByLng("ru"));
+        view.showSportTournamentInfo(sport.getSportId());
     }
 }

@@ -8,9 +8,17 @@ public class Data {
     @SerializedName("service")
     @Expose
     private String service;
+    @SerializedName("sportId")
+    @Expose
+    private int sportId;
 
     public Data(String service) {
         this.service = service;
+    }
+
+    public Data(String service, int sportId) {
+        this.service = service;
+        this.sportId = sportId;
     }
 
     public String getService() {
@@ -21,4 +29,11 @@ public class Data {
         this.service = service;
     }
 
+    public int getSportId() {
+        return sportId;
+    }
+
+    public void setSportId(int sportId) {
+        this.sportId = sportId;
+    }
 }
