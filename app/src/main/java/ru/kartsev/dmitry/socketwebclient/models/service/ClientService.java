@@ -43,7 +43,7 @@ public class ClientService {
     // server port
     private static final int SERVER_PORT = 18500;
     // server IP address
-    private static final String SERVER_IP = /*"91.121.64.108";*/"81.176.228.82";
+    private static final String SERVER_IP = "91.121.64.108";/*"81.176.228.82";*/
 
 
     public ClientService(Context context, FragmentActivity activity, SportMapImpl sportMap) {
