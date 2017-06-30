@@ -19,6 +19,7 @@ import java.util.Map;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import io.socket.engineio.client.transports.WebSocket;
 import ru.kartsev.dmitry.socketwebclient.R;
 import ru.kartsev.dmitry.socketwebclient.models.answers.sport.SportDTO;
 import ru.kartsev.dmitry.socketwebclient.models.answers.tournament.TournamentDTO;
@@ -43,7 +44,7 @@ public class ClientService {
     // server port
     private static final int SERVER_PORT = 18500;
     // server IP address
-    private static final String SERVER_IP = "91.121.64.108";/*"81.176.228.82";*/
+    private static final String SERVER_IP = /*"91.121.64.108";*/"81.176.228.82";
 
 
     public ClientService(Context context, FragmentActivity activity, SportMapImpl sportMap) {
@@ -51,7 +52,10 @@ public class ClientService {
         this.activity = activity;
         this.sportsMapImpl = sportMap;
         try {
-            mSocket = IO.socket("http://" + SERVER_IP + ":" + SERVER_PORT);
+            // setting transport to only websocket to avoid polling
+            IO.Options options = new IO.Options();
+            options.transports = new String[] { WebSocket.NAME };
+            mSocket = IO.socket("http://" + SERVER_IP + ":" + SERVER_PORT, options);
             mSocket.on(Socket.EVENT_CONNECT, onConnect);
             mSocket.on("a", onGetMessage);
             mSocket.connect();
