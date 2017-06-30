@@ -13,20 +13,19 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import io.socket.engineio.client.transports.WebSocket;
 import ru.kartsev.dmitry.socketwebclient.R;
 import ru.kartsev.dmitry.socketwebclient.models.answers.sport.SportDTO;
 import ru.kartsev.dmitry.socketwebclient.models.answers.tournament.TournamentDTO;
 import ru.kartsev.dmitry.socketwebclient.presenter.Constants;
 import ru.kartsev.dmitry.socketwebclient.presenter.ISportMapPresenter;
-import ru.kartsev.dmitry.socketwebclient.presenter.impl.SportMapImpl;
+import ru.kartsev.dmitry.socketwebclient.presenter.impl.SportMapPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.vo.TournamentInfo;
-import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
 
 
 public class ClientService {
@@ -46,12 +45,15 @@ public class ClientService {
     private static final String SERVER_IP = /*"91.121.64.108";*/"81.176.228.82";
 
 
-    public ClientService(Context context, FragmentActivity activity, SportMapImpl sportMap) {
+    public ClientService(Context context, FragmentActivity activity, SportMapPresenter sportMap) {
         this.mContext = context;
         this.activity = activity;
         this.sportsMapImpl = sportMap;
         try {
-            mSocket = IO.socket("http://" + SERVER_IP + ":" + SERVER_PORT);
+            // setting transport to only websocket to avoid polling
+            IO.Options options = new IO.Options();
+            options.transports = new String[] { WebSocket.NAME };
+            mSocket = IO.socket("http://" + SERVER_IP + ":" + SERVER_PORT, options);
             mSocket.on(Socket.EVENT_CONNECT, onConnect);
             mSocket.on("a", onGetMessage);
             mSocket.connect();

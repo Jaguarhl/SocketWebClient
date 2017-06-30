@@ -16,7 +16,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import ru.kartsev.dmitry.socketwebclient.R;
 import ru.kartsev.dmitry.socketwebclient.presenter.ISportMapPresenter;
-import ru.kartsev.dmitry.socketwebclient.presenter.impl.SportMapImpl;
+import ru.kartsev.dmitry.socketwebclient.presenter.impl.SportMapPresenter;
 import ru.kartsev.dmitry.socketwebclient.presenter.vo.Sports;
 import ru.kartsev.dmitry.socketwebclient.view.impl.MainActivity;
 import ru.kartsev.dmitry.socketwebclient.view.impl.adapters.SportMapAdapter;
@@ -26,7 +26,7 @@ import ru.kartsev.dmitry.socketwebclient.view.impl.adapters.SportMapAdapter;
  */
 
 public class FrameItemsList extends BaseFragment implements ISportMapView {
-    private ISportMapPresenter presenter = new SportMapImpl(this, MainActivity.getContext(),
+    private ISportMapPresenter presenter = new SportMapPresenter(this, MainActivity.getContext(),
             MainActivity.getInstance());
     private SportMapAdapter adapter;
 

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements IView{
         ButterKnife.bind(this);
         instance = this;
 
-//        sportMap = new SportMapImpl(this, getContext(), this);
+//        sportMap = new SportMapPresenter(this, getContext(), this);
 
         fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(TAG);

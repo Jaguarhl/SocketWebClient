@@ -1,4 +1,4 @@
-/*package ru.kartsev.dmitry.socketwebclient.view.impl.adapters;
+package ru.kartsev.dmitry.socketwebclient.view.impl.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +14,7 @@ import ru.kartsev.dmitry.socketwebclient.R;
  * Created by dmitry on 26.06.17.
  */
 
-/*public abstract class BaseAdapterTournamentInfo<T> extends RecyclerView.Adapter<BaseAdapterTournamentInfo.ViewHolder> {
+public abstract class BaseAdapterTournamentInfo<T> extends RecyclerView.Adapter<BaseAdapterTournamentInfo.ViewHolder> {
 
     public static final String LOG_TAG = "BaseAdapterTInfo";
     protected List<T> list;
@@ -49,4 +49,4 @@ import ru.kartsev.dmitry.socketwebclient.R;
             textTournamentName = (TextView) itemView.findViewById(R.id.textTournamentName);
         }
     }
-}*/
+}

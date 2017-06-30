@@ -33,7 +33,7 @@ import ru.kartsev.dmitry.socketwebclient.view.impl.fragments.ISportMapView;
  * 22.06.17
  */
 
-public class SportMapImpl implements ISportMapPresenter {
+public class SportMapPresenter implements ISportMapPresenter {
     public static final String LOG_TAG = "SportMapPresenter";
     private static final String BUNDLE_SPORTS_LIST_KEY = "BUNDLE_SPORTS_LIST_KEY";
     private ISportMapView view;
@@ -46,7 +46,7 @@ public class SportMapImpl implements ISportMapPresenter {
     // we will store loaded tournaments data in this lis
     private List<TournamentInfo> tournamentsList = new ArrayList<>();
 
-    public SportMapImpl(ISportMapView view, Context context, FragmentActivity Activity) {
+    public SportMapPresenter(ISportMapView view, Context context, FragmentActivity Activity) {
         this.view = view;
         this.context = context;
         this.activity = Activity;
